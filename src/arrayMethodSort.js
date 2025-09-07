@@ -8,8 +8,20 @@ function applyCustomSort() {
     const array = this;
 
     const compareFunctionHelper =
-      compareFunction ||
+      typeof compareFunction === 'function' ||
       ((a, b) => {
+        if (a === undefined && b !== undefined) {
+          return 1;
+        }
+
+        if (a !== undefined && b === undefined) {
+          return -1;
+        }
+
+        if (a === undefined && b === undefined) {
+          return 0;
+        }
+
         const aString = String(a);
         const bString = String(b);
 
@@ -24,7 +36,7 @@ function applyCustomSort() {
           return 1;
         }
 
-        return aString.localeCompare(bString);
+        return String(a).localeCompare(String(b));
       });
 
     for (let i = 0; i < array.length; i++) {
@@ -34,6 +46,10 @@ function applyCustomSort() {
 
           array[i] = array[y];
           array[y] = result;
+        }
+
+        if (array[i] === undefined || array[y] === undefined) {
+          continue;
         }
       }
     }
